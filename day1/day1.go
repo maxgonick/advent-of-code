@@ -9,6 +9,12 @@ import (
 	"strings"
 )
 
+func Solve() {
+	fmt.Println("Day One Solutions:")
+	fmt.Println("Part One:", part_one())
+	fmt.Println("Part Two:", part_two())
+}
+
 func check(e error) {
 	if e != nil {
 		panic(e)
@@ -62,10 +68,4 @@ func part_two() int {
 		result += val * value_count[val]
 	}
 	return result
-}
-
-func Solve() {
-	fmt.Println("Day One Solutions:")
-	fmt.Println("Part One:", part_one())
-	fmt.Println("Part Two:", part_two())
 }

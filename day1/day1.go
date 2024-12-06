@@ -1,4 +1,4 @@
-package main
+package day1
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ func check(e error) {
 }
 
 func process() ([]int, []int) {
-	data, err := os.ReadFile("input.txt")
+	data, err := os.ReadFile("day1/input.txt")
 	check(err)
 	dataList := strings.Split(string(data), "\n")
 	leftList, rightList := make([]int, len(dataList)), make([]int, len(dataList))
@@ -64,8 +64,8 @@ func part_two() int {
 	return result
 }
 
-func main() {
+func Solve() {
+	fmt.Println("Day One Solutions:")
 	fmt.Println("Part One:", part_one())
 	fmt.Println("Part Two:", part_two())
-
 }

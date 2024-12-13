@@ -9,7 +9,7 @@ import (
 )
 
 func Solve() {
-	fmt.Println("Day One Solutions:")
+	fmt.Println("Day Two Solutions:")
 	fmt.Println("Part One:", partOne())
 	fmt.Println("Part Two:", partTwo())
 

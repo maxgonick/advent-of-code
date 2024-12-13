@@ -10,10 +10,9 @@ import (
 
 func Solve() {
 	fmt.Println("Day One Solutions:")
-	fmt.Println("Part One:", part_one())
-	// fmt.Println("Part Two:", part_two())
+	fmt.Println("Part One:", partOne())
+	fmt.Println("Part Two:", partTwo())
 
-	part_one()
 }
 
 func check(e error) {
@@ -21,6 +20,14 @@ func check(e error) {
 		panic(e)
 	}
 }
+
+type DeltaState int
+
+const (
+	Undefined  DeltaState = 0
+	Increasing DeltaState = 1
+	Decreasing DeltaState = -1
+)
 
 func process() [][]int {
 	data, err := os.ReadFile("day2/input.txt")
@@ -31,58 +38,79 @@ func process() [][]int {
 		reportString := strings.Fields(report)
 		reportList[reportIndex] = make([]int, len(reportString))
 		for valIndex, val := range reportString {
-			val_int, err := strconv.Atoi(val)
+			valInt, err := strconv.Atoi(val)
 			check(err)
-			reportList[reportIndex][valIndex] = val_int
+			reportList[reportIndex][valIndex] = valInt
 		}
 	}
 	return reportList
 
 }
 
-func part_one() int {
-	type DeltaState int
+func processReport(report []int) bool {
+	var state = Undefined
+	delta := report[0] - report[1]
+	switch {
+	case delta > 0:
+		state = Decreasing
+	case delta < 0:
+		state = Increasing
+	default:
+		return false
+	}
+	for i := 0; i < len(report)-1; i++ {
+		delta := report[i] - report[i+1]
+		localState := DeltaState(Undefined)
+		switch {
+		case delta > 0:
+			localState = Decreasing
+		case delta < 0:
+			localState = Increasing
+		}
 
-	const (
-		Undefined  DeltaState = 0
-		Increasing DeltaState = 1
-		Decreasing DeltaState = -1
-	)
+		if localState != state {
+			return false
+		}
 
+		if math.Abs(float64(delta)) > 3 {
+			return false
+		}
+	}
+	return true
+}
+
+func partOne() int {
 	reportList := process()
 	result := len(reportList)
 	for _, report := range reportList {
-		var state DeltaState = Undefined
-		for i := 0; i < len(report)-1; i++ {
-			delta := report[i+1] - report[i]
-			// Set State
-			if delta > 0 {
-				if state == Undefined {
-					state = Increasing
-				}
-				if state == Decreasing {
-					result -= 1
-					break
-				}
-			} else if delta < 0 {
-				if state == Undefined {
-					state = Decreasing
-				}
-				if state == Increasing {
-					result -= 1
-					break
-				}
-			} else {
-				//Two Same Levels
-				result -= 1
-				break
-			}
-
-			if math.Abs(float64(delta)) > 3 {
-				result -= 1
-				break
-			}
+		reportResult := processReport(report)
+		if !reportResult {
+			result -= 1
 		}
 	}
 	return result
+}
+
+func partTwo() int {
+	goodReports := 0
+	reportList := process()
+	for _, report := range reportList {
+
+		if processReport(report) {
+			goodReports++
+			continue
+		}
+		for index := range report {
+			newReport := make([]int, len(report)-1)
+			copy(newReport[:index], report[:index])
+			copy(newReport[index:], report[index+1:])
+
+			if processReport(newReport) {
+				goodReports++
+				break
+			}
+
+		}
+	}
+	return goodReports
 }

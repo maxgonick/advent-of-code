@@ -30,7 +30,7 @@ const (
 )
 
 func process() [][]int {
-	data, err := os.ReadFile("day2/input.txt")
+	data, err := os.ReadFile("/Users/maxwellgonick/dev/advent_of_code/day2/input.txt")
 	check(err)
 	dataList := strings.Split(string(data), "\n")
 	reportList := make([][]int, len(dataList))
